@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>六轉碎片計算機 by影月</title>
+    <title>六轉碎片計算機</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -155,7 +155,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>六轉進度計算機 By影月</h1>
+        <h1>六轉進度計算機</h1>
         <div class="form-group">
             <label>職業</label>
             <select id="jobSelect" class="job-select" onchange="updateSkills()">
@@ -304,6 +304,14 @@
             </select>
         </div>
         <div class="form-group">
+            <label for="dungeonSelect">副本</label>
+            <select id="dungeonSelect" class= "reward-select">
+                <option value="0">選擇副本</option>
+                <option value="1">高山</option>
+                <option value="2">安格洛</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="dungeonCompleted">本周副本已打</label>
             <input type="checkbox" class="inputone" id="dungeonCompleted">
         </div>
@@ -312,8 +320,6 @@
             <select id="dungeonRewards" class="reward-select">
                 <option value="-1">沒打</option>
                 <option value="0">免費</option>
-                <option value="200">200楓點</option>
-                <option value="360">360楓點</option>
             </select>
         </div>
         <button class="btn" onclick="calculate()">計算</button>
@@ -530,6 +536,7 @@
             //副本完成狀況與種類
             var nowDungeon = document.getElementById('dungeonCompleted').checked;
             var dungeonRewards = parseInt(document.getElementById('dungeonRewards').value);
+            var dungeonSelect = parseInt(document.getElementById('dungeonSelect').value);
             //其他值
             var remainskillfrags = document.getElementById('remainskillfrags').value;
             var remainmasterfrags1 = document.getElementById('remainmasterfrags1').value;
@@ -630,14 +637,12 @@
             var dailyfrag = 12;
             var weeeklyfrag = 50;
             var dungeonfrag = 0;
-            if(dungeonRewards == -1){
+            if(dungeonRewards == -1 || dungeonSelect == 0){
                 dungeonfrag = 0;
-            }else if (dungeonRewards == 0) {
+            }else if (dungeonRewards == 0 && dungeonSelect == 1) {
                 dungeonfrag = 30;
-            } else if (dungeonRewards == 200) {
-                dungeonfrag = 90;
-            } else if (dungeonRewards == 360) {
-                dungeonfrag = 150;
+            }else if(dungeonRewards == 0 && dungeonSelect == 2){
+                    dungeonfrag = 45;
             }
             var wholeweekfrags = dailyfrag * 7 + weeeklyfrag + dungeonfrag;
             //根據副本進行狀況計算當周
@@ -882,6 +887,7 @@
             localStorage.setItem('currentsouls', souls);
             localStorage.setItem('dungeonCompleted', dungeonCompleted);
             localStorage.setItem('dungeonRewards', dungeonRewards);
+            localStorage.setItem('dungeonSelect', dungeonSelect);
             localStorage.setItem('jobSelect',jobSelect);
         }
         //當頁面加載時讀取 localStorage
@@ -911,6 +917,7 @@
             document.getElementById('currentsouls').value = localStorage.getItem('currentsouls') || 0;
             document.getElementById('dungeonCompleted').checked = localStorage.getItem('dungeonCompleted') === 'true';
             document.getElementById('dungeonRewards').value = localStorage.getItem('dungeonRewards') || 0;
+            document.getElementById('dungeonSelect').value = localStorage.getItem('dungeonSelect') || 0;
             document.getElementById('jobSelect').value = localStorage.getItem('jobSelect') || "選擇職業";
             
             // 重新計算以顯示保存的結果
@@ -943,6 +950,7 @@
             document.getElementById('currentsouls').value = 0;
             document.getElementById('dungeonCompleted').value = true;
             document.getElementById('dungeonRewards').value = 0;
+            document.getElementById('dungeonSelect').value = 0;
             document.getElementById('jobSelect').value = "選擇職業";
             localStorage.clear();
             calculate();
